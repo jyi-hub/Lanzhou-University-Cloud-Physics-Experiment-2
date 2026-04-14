@@ -1,0 +1,31 @@
+1. 如何绘制子图
+2. 如何设置色标（连续色标、间断）
+3. 如何设置地图线
+answer：
+2. 画布、
+绘图axes（ax，plt.subplots(),add_subplots()（坐标、坐标、数据、cmap、norm、投影方式、海岸线与国界线）
+、坐标轴、标题、颜色条、legend、tick、set_aspect() ax的宽高比 、annoteate_axes(),axes的gird设置（）
+基本解决
+
+4. 201804维度与time零维标量变量冲突
+
+原因描述：由于存在维度time（长度为1），且同时存在time（）变量--一个零维变量，导致冲突报错。文件不可读取
+解决方法：
+
+先删除time变量，再读取。此时可读取ds。
+    file_path = r"F:\云物理实验\云量2018\3D_CloudFraction330m_201804_avg_CFMIP2_sat_3.1.2.nc"
+    file_path1 = r"F:\云物理实验\云量2018\3D_CloudFraction330m_201803_avg_CFMIP2_sat_3.1.2.nc"
+    ds=xr.open_dataset(file_path,drop_variables=['time'])
+    ds1=xr.open_dataset(file_path1)
+    print(ds1.coords)
+    print(ds.coords)
+output:
+    Coordinates:
+    * longitude  (longitude) float32 720B -179.0 -177.0 -175.0 ... 177.0 179.0
+    * latitude   (latitude) float32 360B -89.0 -87.0 -85.0 ... 85.0 87.0 89.0
+    * time       (time) datetime64[ns] 8B 2018-03-16
+    Coordinates:
+    * longitude  (longitude) float32 720B -179.0 -177.0 -175.0 ... 177.0 179.0
+    * latitude   (latitude) float32 360B -89.0 -87.0 -85.0 ... 85.0 87.0 89.0
+
+观察到ds中没有time变量与time坐标变量，与正常文件ds1相比。这是由于坐标变量，本质也是变量，不过是特殊的变量。所以在删除时会把time变量与坐标都删除
